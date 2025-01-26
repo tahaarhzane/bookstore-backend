@@ -8,6 +8,7 @@ import com.bookstore.bookstore_backend.model.Role;
 @Setter
 public class AuthRequest {
     private String email;
+    private String name;
     private String password;
     private Role role; // Add role field
 }

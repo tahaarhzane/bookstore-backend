@@ -1,17 +1,15 @@
 package com.bookstore.bookstore_backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import jakarta.validation.constraints.*;
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +24,9 @@ public class Book {
 
     @Positive(message = "Price must be greater than zero")
     private double price;
+
+    @Column(nullable = false)
+    private String category;
 
     @Min(value = 0, message = "Stock cannot be negative")
     private int stock;

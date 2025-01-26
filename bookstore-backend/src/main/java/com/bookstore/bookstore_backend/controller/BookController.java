@@ -2,11 +2,14 @@ package com.bookstore.bookstore_backend.controller;
 
 import com.bookstore.bookstore_backend.model.Book;
 import com.bookstore.bookstore_backend.service.BookService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/books")
@@ -47,6 +50,40 @@ public class BookController {
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Book>> searchBooks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice) {
+
+        return ResponseEntity.ok(bookService.searchBooks(title, author, category, minPrice, maxPrice));
+    }
+
+    // Endpoint for paginated books
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<Book>> getPaginatedBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(bookService.getPaginatedBooks(pageable));
+    }
+
+
+    // Endpoint for paginated search
+    @GetMapping("/search/paginated")
+    public ResponseEntity<Page<Book>> searchBooksPaginated(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            Pageable pageable) {
+        return ResponseEntity.ok(bookService.searchBooksPaginated(title, author, category, minPrice, maxPrice, pageable));
     }
 }
 
